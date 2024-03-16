@@ -14,40 +14,33 @@ access_token = "7bc5a60c-b5ca-43e1-ae79-1bdaa0f97155"
 API_URL = "https://opencitations.net/index/api/v2"
 META_URL = "https://opencitations.net/meta/api/v1"
 
-DOI = "10.6017/ital.v40i1.12553"
+doi = "10.6017/ital.v40i1.12553"
+# URL encode the DOI to safely transmitted (e.g. /, :)
+encoded_doi = requests.utils.quote(doi)
 
-API_CALL = f"{API_URL}/references/doi:{DOI}"
-#API_CALL = f"https://opencitations.net/index/api/v2/references/doi:{DOI}"
-META_CALL = f"{META_URL}/doi:{DOI}"
+#API_CALL = f"{API_URL}/references/doi:{encoded_doi}"
 
+# Hard code: worked! 
+#META_CALL = f"https://opencitations.net/meta/api/v1/metadata/doi:{encoded_doi}"
+META_CALL = f"{META_URL}/metadata/doi:{encoded_doi}"
 
+print(META_CALL)
 
-# Headers to include with the request
-#headers = {    "Authorization": f"Bearer {access_token}",    "Accept": "application/json",  # Assuming you want the response in JSON format }
+# Headers to include with the request, error code: 403
+#headers = {"Authorization": f"Bearer {access_token}",    "Accept": "application/json"}
 
-HTTP_HEADERS = {"authorization": "7bc5a60c-b5ca-43e1-ae79-1bdaa0f97155"}
+# Correct header
+headers = {"Accept": "application/json"}
+response = requests.get(META_CALL, headers = headers)
 
-
-# Making the GET request
-#response = requests.get(API_CALL, headers = HTTP_HEADERS)
-
-#if response.status_code == 200:
-    # Assuming the response is in JSON format
- #   data = response.json()
-  #  print("Data retrieved successfully:")
-   # print(data)
-#else:
- #   print(f"Failed to retrieve data. Status code: {response.status_code}")
-
-
-response = requests.get(META_CALL, headers = HTTP_HEADERS)
+#response = requests.get(META_CALL)
 
 # Checking if the request was successful
 if response.status_code == 200:
     # Assuming the response is in JSON format
     data = response.json()
-    print("METAData retrieved successfully:")
-    print(data)
+    print("Citations retrieved successfully:")
+    for citation in data:
+       print(citation)
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
-
