@@ -7,15 +7,19 @@ doi = "10.6017/ital.v40i1.12553"
 # URL encode the DOI
 encoded_doi = requests.utils.quote(doi)
 
-# The API endpoint URL for retrieving citations of a specific DOI
-#url = f"https://opencitations.net/index/coci/api/v1/citations/{encoded_doi}"
-url = f"https://opencitations.net/index/api/v1/citations/{encoded_doi}"
+# The API endpoint URL for retrieving citations of a specific DOI 
+# API V1: 
+url1 = f"https://opencitations.net/index/api/v1/citations/{encoded_doi}"
 
-### Not working, why?
-url2 = f"https://opencitations.net/index/api/v2/citations/{encoded_doi}"
+### API v2: 
+url = f"https://opencitations.net/index/api/v2/citations/doi:{encoded_doi}"
+
+
+META_CALL = f"https://opencitations.net/meta/api/v1/metadata/doi:{encoded_doi}"
+
 
 # Making the GET request
-response = requests.get(url2)
+response = requests.get(url)
 
 # Checking if the request was successful
 if response.status_code == 200:
